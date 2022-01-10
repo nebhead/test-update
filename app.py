@@ -63,8 +63,20 @@ def settings_base(action=None):
 def checkupdate(action=None):
 	global settings
 	update_data = read_update_data()
+	if(update_data['version'] == ''):
+		update_data['version'] == settings['globals']['version']
+		write_update_data(update_data)
+	if(update_data['branch_target'] == ''):
+		update_data['branch_target'] = get_branch()
+		write_update_data(update_data)
 
-	commits_behind = get_available_updates()
+	avail_updates_struct = get_available_updates()
+
+	if(avail_updates_struct['success']): 
+		commits_behind = avail_updates_struct['commits_behind']
+	else:
+		return jsonify({'result' : 'failure'})
+
 	return jsonify({'result' : 'success', 'current' : update_data['version'], 'behind' : commits_behind})
 
 @app.route('/admin/<action>', methods=['POST','GET'])

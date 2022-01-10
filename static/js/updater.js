@@ -6,7 +6,10 @@ $(document).ready(function(){
 	});
 	req.done(function(data) {
 		if(data['result'] != 'success') {
-			alert('Failed to enable API!');
+			console.log(data)
+			var status_string = '<b style="color:red;">Update check failed.</b>';
+			$('#update_status').html(status_string);
+			$('#update_status_spinner').hide();
 		} else {
 			console.log(data)
 			var status_string = 'Your system is ' + data['behind'] + ' commits behind.';
