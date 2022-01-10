@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block title %} Settings {% endblock %}
+
+{% block notify %}
+<!-- Success -->
+  {% if (alert['type'] == 'success') %}
+  <div class="container">
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i>&nbsp; <strong>Success.</strong> {{ alert['text'] }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  </div>
+  {% elif (alert['type'] == 'error') %} 
+  <div class="container">
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i>&nbsp; <strong>Error!</strong> {{ alert['text'] }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  </div>
+  {% elif (alert['type'] == 'warning') %} 
+  <div class="container">
+    <div class="alert alert-warning alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i>&nbsp; <strong>Warning!</strong> {{ alert['text'] }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+  </div>
+  {% endif %}
+{% endblock %}
+
+{% block content %}  
+<div class="container">
+
+<!-- Theme Card -->
+<form name="theme" action="/settings" method="POST">
+<div class="card shadow">
+    <div class="card-header bg-primary">
+        <i class="fas fa-palette"></i>&nbsp; Theme Settings
+    </div>
+    <div class="card-body">
+        <div class="form-group">
+            <label for="sel1">Select a Theme:</label>
+            <select class="form-select" id="theme" name="theme" aria-label="theme-select">
+                {% for theme in settings['globals']['themelist'] %}
+              <option value="{{ theme['name'] }}" {% if settings['globals']['theme'] == theme['filename'] %}selected{% endif %}>{{ theme['name'] }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+    <div class="card-footer">
+        <button type="submit" class="btn btn-primary">Set Theme</button>
+    </div>
+</div>
+</form><br><br>
+
+</div> <!-- End of Container -->
+{% endblock %}
+
+{% block scripts %} 
+{% endblock %}
