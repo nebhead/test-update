@@ -12,6 +12,7 @@ def default_update_data(version='2022.1.0'):
 	update_data['remote_url'] = get_remote_url()
 	update_data['branch_target'] = get_branch()
 	update_data['version'] = version
+	update_data['branches'] = get_available_branches()
 	return update_data
 
 def read_update_data():

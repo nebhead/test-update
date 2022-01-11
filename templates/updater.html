@@ -4,20 +4,67 @@
 
 {% block content %} 
 <div class="container">
-	Project Updater Test Framework
-	Version: {{ settings['globals']['version'] }}
+
+<!-- Statu & Info Row -->
+<div class="row">
+	<div class="col">
+		<div class="card shadow">
+			<div class="card-header bg-info">
+				<i class="far fa-arrow-alt-circle-up"></i>&nbsp; Status
+			</div>
+			<div class="card-body text-center">
+				<div id="update_checking">Checking for update... <br> 
+					<div class="spinner-border text-primary" role="status" id="update_status_spinner">
+						<span class="visually-hidden">Loading...</span>
+					</div>
+				</div>
+				<div id="update_available" style="display:none">
+					An update is available!  You are currently <div id="commits_behind"></div> changes behind the latest on this branch. <br>
+				</div>
+				<div id="update_failed" style="display:none">
+					<b style="color:red;">ERROR: The check for an update failed for some reason.  Check your logs.</b>
+					<br><h1><i class="fas fa-exclamation-triangle"></i></h1>
+				</div>
+				<div id="update_current" style="display:none">
+					<b style="color:rgb(20, 150, 20);">Success! Your version is up to date with this branch.</b>
+					<br><h1><i class="far fa-check-circle"></i></h1>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col">
+		<div class="card shadow">
+			<div class="card-header bg-info">
+				<i class="fas fa-info-circle"></i>&nbsp; Info
+			</div>
+			<div class="card-body">
+				<b>Current Version:</b> {{ update_data['version'] }}<br>
+				<b>Branch:</b> {{ update_data['branch_target']}}<br>
+				<b>Remote:</b> {{ remote_url }}<br>
+			</div>
+		</div>
+	</div>	
+</div><br>
 
 <!-- Updater Card -->
 <div class="card shadow">
     <div class="card-header bg-info">
-        <i class="far fa-arrow-alt-circle-up"></i>&nbsp; System Update
+        <i class="far fa-arrow-alt-circle-up"></i>&nbsp; Updater
     </div>
-    <div class="card-body text-center">
-		<p id='update_status'>Checking for update...  
-			<div class="spinner-border text-primary" role="status" id="update_status_spinner">
-				<span class="visually-hidden">Loading...</span>
-			</div>
-		</p>
+    <div class="card-body">
+
+	<!-- Select Branch Target -->
+	<select class="form-select" aria-label="Branch-Target">
+		<option selected>Select a Branch Target</option>
+		{% for branch in update_data['branches'] %}
+		<option value="{{branch}}">{{ branch }}</option>
+		{% endfor %}
+	</select>
+
+	<!-- Do Update -->
+
+	<!-- Output Window/Textbox -->
+
 	</div>
 </div>
 <br>

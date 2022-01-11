@@ -7,14 +7,19 @@ $(document).ready(function(){
 	req.done(function(data) {
 		if(data['result'] != 'success') {
 			console.log(data)
-			var status_string = '<b style="color:red;">Update check failed.</b>';
-			$('#update_status').html(status_string);
-			$('#update_status_spinner').hide();
+			$('#update_checking').hide();
+			$('#update_failed').show();
 		} else {
 			console.log(data)
-			var status_string = 'Your system is ' + data['behind'] + ' commits behind.';
-			$('#update_status').html(status_string);
-			$('#update_status_spinner').hide();
+			if(data['behind'] != 0) {
+				var status_string = 'Your system is ' + data['behind'] + ' commits behind.';
+				$('#update_checking').hide();
+				$('#update_available').html(status_string);
+				$('#update_available').show();
+			} else {
+				$('#update_checking').hide();
+				$('#update_current').show();
+			}
 		};
 	});
   });

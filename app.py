@@ -100,6 +100,9 @@ def update_page(action=None):
 	if(update_data['branch_target'] == ''):
 		update_data['branch_target'] = get_branch()
 		write_update_data(update_data)
+	if(update_data['branches'] == []):
+		update_data['branches'] = get_available_branches()
+		write_update_data(update_data)
 
 	# Create Alert Structure for Alert Notification
 	alert = { 
