@@ -54,17 +54,21 @@
     <div class="card-body">
 
 	<!-- Select Branch Target -->
+	Change the current branch:
 	<select class="form-select" aria-label="Branch-Target">
-		<option selected>Select a Branch Target</option>
 		{% for branch in update_data['branches'] %}
-		<option value="{{branch}}">{{ branch }}</option>
+			{% if branch == update_data['branch_target'] %}
+				<option value="{{branch}}" selected>{{ branch }}</option>
+			{% else %} 
+				<option value="{{branch}}">{{ branch }}</option>
+			{% endif %}
 		{% endfor %}
 	</select>
 	<br>
 	<!-- Do Update -->
 	<div class="d-grid gap-2">
 		<button type="button" class="btn btn-outline-success btn-block shadow">
-			Perform Update
+			Perform Update on {{ update_data['branch_target'] }}
 		</button>
 	</div>
 	<!-- Output Window/Textbox -->
