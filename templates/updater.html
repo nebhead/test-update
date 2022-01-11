@@ -38,9 +38,9 @@
 				<i class="fas fa-info-circle"></i>&nbsp; Info
 			</div>
 			<div class="card-body">
-				<b>Current Version:</b> {{ update_data['version'] }}<br>
-				<b>Branch:</b> {{ update_data['branch_target']}}<br>
-				<b>Remote:</b> {{ remote_url }}<br>
+				<b>Current Version:</b>&nbsp;&nbsp; <i>{{ update_data['version'] }}</i><br>
+				<b>Branch:</b>&nbsp;&nbsp; <i>{{ update_data['branch_target'] }}</i><br>
+				<b>Remote:</b>&nbsp;&nbsp; <i>{{ update_data['remote_url'] }}</i><br>
 			</div>
 		</div>
 	</div>	
@@ -60,9 +60,13 @@
 		<option value="{{branch}}">{{ branch }}</option>
 		{% endfor %}
 	</select>
-
+	<br>
 	<!-- Do Update -->
-
+	<div class="d-grid gap-2">
+		<button type="button" class="btn btn-outline-success btn-block shadow">
+			Perform Update
+		</button>
+	</div>
 	<!-- Output Window/Textbox -->
 
 	</div>
