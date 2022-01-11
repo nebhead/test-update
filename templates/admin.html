@@ -43,18 +43,25 @@
 			</div>
 		</div>
 		<div id="update_available" style="display:none">
-			An update is available!  You are currently <div id="commits_behind"></div> changes behind the latest on this branch. <br>
-			<a href="/update" class="btn btn-success btn-lg" role="button">Go to Updater</a>
+			<div class="alert alert-success fade show" role="alert">
+				<strong>An update is available!</strong> You are currently <div id="commits_behind"></div> changes behind the latest on this branch. <br>
+				<br><h1><i class="fas fa-cloud-download-alt"></i></h1>
+			</div>
+			<a href="/update" class="btn btn-success shadow" role="button">Go to the Updater</a>
 		</div>
 		<div id="update_failed" style="display:none">
-			<b style="color:red;">ERROR: The check for an update failed for some reason.  Check your logs.</b>
-			<br><h1><i class="fas fa-exclamation-triangle"></i></h1>
-			<a href="/update" class="btn btn-outline-primary btn-block shadow" role="button">Go to Updater</a>
+			<div class="alert alert-danger fade show" role="alert">
+				<strong>Error!</strong> The update check failed for some reason. Check your logs.
+				<br><h1><i class="fas fa-exclamation-triangle"></i></h1>
+			</div>
+			<a href="/update" class="btn btn-warning shadow" role="button">Go to the Updater</a>
 		</div>
 		<div id="update_current" style="display:none">
-			<b style="color:rgb(20, 150, 20);">Success! Your version is up to date with this branch.</b>
-			<br><h1><i class="far fa-check-circle"></i></h1>
-			<a href="/update" class="btn btn-outline-primary btn-block shadow" role="button">Go to Updater</a>
+			<div class="alert alert-info fade show" role="alert">
+				<strong>You are up to date!</strong>
+				<br><h1><i class="far fa-check-circle"></i></h1>
+			</div>
+			<a href="/update" class="btn btn-info shadow" role="button">Go to the Updater Anyway</a>
 		</div>
 	</div>
 </div>

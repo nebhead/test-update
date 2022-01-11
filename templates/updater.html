@@ -5,7 +5,7 @@
 {% block content %} 
 <div class="container">
 
-<!-- Statu & Info Row -->
+<!-- Status & Info Row -->
 <div class="row">
 	<div class="col">
 		<div class="card shadow">
@@ -19,16 +19,24 @@
 					</div>
 				</div>
 				<div id="update_available" style="display:none">
-					An update is available!  You are currently <div id="commits_behind"></div> changes behind the latest on this branch. <br>
+					<div class="alert alert-success fade show" role="alert">
+						<strong>An update is available!</strong> You are currently <div id="commits_behind"></div> changes behind the latest on this branch. <br>
+						<br><h1><i class="fas fa-cloud-download-alt"></i></h1>
+					</div>
 				</div>
 				<div id="update_failed" style="display:none">
-					<b style="color:red;">ERROR: The check for an update failed for some reason.  Check your logs.</b>
-					<br><h1><i class="fas fa-exclamation-triangle"></i></h1>
+					<div class="alert alert-danger fade show" role="alert">
+						<strong>Error!</strong> The update check failed for some reason. Check your logs.
+						<br><h1><i class="fas fa-exclamation-triangle"></i></h1>
+					</div>
 				</div>
 				<div id="update_current" style="display:none">
-					<b style="color:rgb(20, 150, 20);">Success! Your version is up to date with this branch.</b>
-					<br><h1><i class="far fa-check-circle"></i></h1>
+					<div class="alert alert-info fade show" role="alert">
+						<strong>You are up to date!</strong>
+						<br><h1><i class="far fa-check-circle"></i></h1>
+					</div>
 				</div>
+		
 			</div>
 		</div>
 	</div>
@@ -46,36 +54,53 @@
 	</div>	
 </div><br>
 
-<!-- Updater Card -->
+<!-- Branch Selector Card -->
 <div class="card shadow">
     <div class="card-header bg-info">
-        <i class="far fa-arrow-alt-circle-up"></i>&nbsp; Updater
+        <i class="fas fa-code-branch"></i>&nbsp; Branch Selector
     </div>
     <div class="card-body">
 
-	<!-- Select Branch Target -->
-	Change the current branch:
-	<select class="form-select" aria-label="Branch-Target">
-		{% for branch in update_data['branches'] %}
-			{% if branch == update_data['branch_target'] %}
-				<option value="{{branch}}" selected>{{ branch }}</option>
-			{% else %} 
-				<option value="{{branch}}">{{ branch }}</option>
-			{% endif %}
-		{% endfor %}
-	</select>
-	<br>
-	<!-- Do Update -->
-	<div class="d-grid gap-2">
-		<button type="button" class="btn btn-outline-success btn-block shadow">
-			Perform Update on {{ update_data['branch_target'] }}
-		</button>
-	</div>
-	<!-- Output Window/Textbox -->
+		<!-- Select Branch Target -->
+		Change the current branch:
+		<select class="form-select" aria-label="Branch-Target">
+			{% for branch in update_data['branches'] %}
+				{% if branch == update_data['branch_target'] %}
+					<option value="{{branch}}" selected>{{ branch }}</option>
+				{% else %} 
+					<option value="{{branch}}">{{ branch }}</option>
+				{% endif %}
+			{% endfor %}
+		</select>
+		<br>
+		<!-- Checkout Selected Branch -->
+		<div class="d-grid gap-2">
+			<button type="button" class="btn btn-primary btn-block shadow">
+				Checkout Branch
+			</button>
+		</div>
 
 	</div>
 </div>
 <br>
+
+<!-- Output Window/Textbox -->
+<div class="card shadow">
+    <div class="card-header bg-info">
+        <i class="fas fa-desktop"></i>&nbsp; Output Window
+    </div>
+    <div class="card-body">
+	<br>
+		<div class="card">
+			<div class="card-body bg-secondary" id="output_window" style="font-family:courier;color:white;">
+				Updater Output...
+			</div>
+		</div>
+	<br>
+	</div>
+</div>
+<br>
+
 
 </div> <!-- End of Container -->
 {% endblock %}

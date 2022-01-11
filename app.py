@@ -52,7 +52,7 @@ def settings_base(action=None):
 	if('theme' in request.form):
 		for theme in settings['globals']['themelist']:
 			if theme['name'] == request.form['theme']:
-				settings['misc']['theme'] = theme['filename']
+				settings['globals']['theme'] = theme['filename']
 				write_settings(settings)
 				alert['type'] = 'success'
 				alert['text'] = 'Theme updated to ' + theme['name'] + "."
@@ -91,18 +91,13 @@ def checkupdate(action=None):
 def update_page(action=None):
 	global settings
 	update_data = read_update_data()
-	
-	if(update_data['version'] == ''):
-		print(f'Version Mismatch.  Updating to: {settings["globals"]["version"]}')
-		update_data['version'] = settings['globals']['version']
-		print(f'Update Version: {update_data["version"]}')
-		write_update_data(update_data)
-	if(update_data['branch_target'] == ''):
-		update_data['branch_target'] = get_branch()
-		write_update_data(update_data)
-	if(update_data['branches'] == []):
-		update_data['branches'] = get_available_branches()
-		write_update_data(update_data)
+
+	# Update the information in the updater.json file	
+	update_data['version'] = settings['globals']['version']
+	update_data['branch_target'] = get_branch()
+	update_data['branches'] = get_available_branches()
+	update_data['remote_url'] = get_remote_url()
+	write_update_data(update_data)
 
 	# Create Alert Structure for Alert Notification
 	alert = { 
