@@ -41,7 +41,7 @@ def write_update_data(update_data):
 	    data_file.write(json_data_string)
 
 def get_available_branches():
-	command = "git branch -r"
+	command = "git branch -a"
 	branches = os.popen(command).readlines()
 	branch_list = []
 	for line in branches:
