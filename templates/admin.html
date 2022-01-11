@@ -37,11 +37,25 @@
         <i class="far fa-arrow-alt-circle-up"></i>&nbsp; System Update
     </div>
     <div class="card-body text-center">
-		<p id='update_status'>Checking for update...  
+		<div id="update_checking">Checking for update... <br> 
 			<div class="spinner-border text-primary" role="status" id="update_status_spinner">
 				<span class="visually-hidden">Loading...</span>
 			</div>
-		</p>
+		</div>
+		<div id="update_available" style="display:none">
+			An update is available!  You are currently <div id="commits_behind"></div> changes behind the latest on this branch. <br>
+			<a href="/update" class="btn btn-success btn-lg" role="button">Go to Updater</a>
+		</div>
+		<div id="update_failed" style="display:none">
+			<b style="color:red;">ERROR: The check for an update failed for some reason.  Check your logs.</b>
+			<br><h1><i class="fas fa-exclamation-triangle"></i></h1>
+			<a href="/update" class="btn btn-outline-primary btn-block shadow" role="button">Go to Updater</a>
+		</div>
+		<div id="update_current" style="display:none">
+			<b style="color:rgb(20, 150, 20);">Success! Your version is up to date with this branch.</b>
+			<br><h1><i class="far fa-check-circle"></i></h1>
+			<a href="/update" class="btn btn-outline-primary btn-block shadow" role="button">Go to Updater</a>
+		</div>
 	</div>
 </div>
 <br>
@@ -166,6 +180,32 @@
 {% endblock %}
 
 {% block scripts %}
-	<!-- Updater Script -->
-	<script src="{{ url_for('static', filename='js/updater.js') }}"></script>
+<!-- Updater Script -->
+<script> 
+	$(document).ready(function(){
+		//console.log('Enabled!')
+		req = $.ajax({
+			url : '/checkupdate',
+			type : 'GET'
+		});
+		req.done(function(data) {
+			if(data['result'] != 'success') {
+				console.log(data)
+				$('#update_checking').hide();
+				$('#update_failed').show();
+			} else {
+				console.log(data)
+				if(data['behind'] != 0) {
+					var status_string = 'Your system is ' + data['behind'] + ' commits behind.';
+					$('#update_checking').hide();
+					$('#update_available').html(status_string);
+					$('#update_available').show();
+				} else {
+					$('#update_checking').hide();
+					$('#update_current').show();
+				}
+			};
+		});
+	  });
+</script>
 {% endblock %}

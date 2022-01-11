@@ -7,11 +7,11 @@ Update support functions to utilize Git/GitHub for live system updates
 import os
 import json
 
-def default_update_data():
+def default_update_data(version='2022.1.0'):
 	update_data = {}
-	update_data['repo_url'] = ''
-	update_data['branch_target'] = ''
-	update_data['version'] = ''
+	update_data['remote_url'] = get_remote_url()
+	update_data['branch_target'] = get_branch()
+	update_data['version'] = version
 	return update_data
 
 def read_update_data():
@@ -94,3 +94,11 @@ def restart_scripts():
 	print('Restarting Scripts... ')
 	command = "service supervisor restart"
 	os.popen(command)
+
+def get_remote_url():
+	command = "git config --get remote.origin.url"
+	remote = os.popen(command).readline()
+	if(remote):
+		return(remote.strip(' \n'))
+	else:
+		return('ERROR: Remote URL not specified in git config.')

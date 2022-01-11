@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+
+{% block title %} Updater {% endblock %}
+
+{% block content %} 
+<div class="container">
+	Project Updater Test Framework
+	Version: {{ settings['globals']['version'] }}
+
+<!-- Updater Card -->
+<div class="card shadow">
+    <div class="card-header bg-info">
+        <i class="far fa-arrow-alt-circle-up"></i>&nbsp; System Update
+    </div>
+    <div class="card-body text-center">
+		<p id='update_status'>Checking for update...  
+			<div class="spinner-border text-primary" role="status" id="update_status_spinner">
+				<span class="visually-hidden">Loading...</span>
+			</div>
+		</p>
+	</div>
+</div>
+<br>
+
+</div> <!-- End of Container -->
+{% endblock %}
+
+{% block scripts %}
+	<!-- Updater Script -->
+	<script src="{{ url_for('static', filename='js/updater.js') }}"></script>
+{% endblock %}

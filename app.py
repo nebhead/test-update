@@ -63,12 +63,20 @@ def settings_base(action=None):
 def checkupdate(action=None):
 	global settings
 	update_data = read_update_data()
+	print(f'Version: {settings["globals"]["version"]}')
 	if(update_data['version'] == ''):
-		update_data['version'] == settings['globals']['version']
+		update_data['version'] = settings['globals']['version']
 		write_update_data(update_data)
 	if(update_data['branch_target'] == ''):
 		update_data['branch_target'] = get_branch()
 		write_update_data(update_data)
+	if(update_data['remote_url'] == ''):
+		remote_url = get_remote_url()
+		if('ERROR' in remote_url):
+			print('f{remote_url}')
+		else:
+			update_data['remote_url'] = remote_url
+			write_update_data(update_data)
 
 	avail_updates_struct = get_available_updates()
 
@@ -79,10 +87,34 @@ def checkupdate(action=None):
 
 	return jsonify({'result' : 'success', 'current' : update_data['version'], 'behind' : commits_behind})
 
+@app.route('/update', methods=['POST','GET'])
+def update_page(action=None):
+	global settings
+	update_data = read_update_data()
+	
+	if(update_data['version'] == ''):
+		print(f'Version Mismatch.  Updating to: {settings["globals"]["version"]}')
+		update_data['version'] = settings['globals']['version']
+		print(f'Update Version: {update_data["version"]}')
+		write_update_data(update_data)
+	if(update_data['branch_target'] == ''):
+		update_data['branch_target'] = get_branch()
+		write_update_data(update_data)
+
+	# Create Alert Structure for Alert Notification
+	alert = { 
+		'type' : '', 
+		'text' : ''
+		}
+
+	return render_template('updater.html', alert=alert, settings=settings, update_data=update_data)
+
+
 @app.route('/admin/<action>', methods=['POST','GET'])
 @app.route('/admin', methods=['POST','GET'])
 def admin(action=None):
 	global settings
+	update_data = read_update_data()
 
 	# Create Alert Structure for Alert Notification
 	alert = { 
@@ -110,7 +142,7 @@ def admin(action=None):
 
 	cpuinfo = os.popen('cat /proc/cpuinfo').readlines()
 
-	return render_template('admin.html', alert=alert, uptime=uptime, cpuinfo=cpuinfo, settings=settings)
+	return render_template('admin.html', alert=alert, uptime=uptime, cpuinfo=cpuinfo, settings=settings, update_data=update_data)
 
 @app.route('/manifest')
 def manifest():
