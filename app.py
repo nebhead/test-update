@@ -129,6 +129,7 @@ def update_page(action=None):
 
 		if('do_update' in r):
 			print('Update Requested')
+			action='restart'
 			result = do_update() 
 			output_html = f'*** Attempting an update on {update_data["branch_target"]} ***<br><br>' 
 			for line in result:
