@@ -46,7 +46,10 @@ def get_available_branches():
 	branch_list = []
 	for line in branches:
 		line = line.strip(' \n *')
-		if('remotes/origin/' in line):
+		if('origin/main' in line):
+			# Skip this line
+			pass
+		elif('remotes/origin/' in line):
 			line = line.replace('remotes/origin/', '')
 			if (line not in branch_list):
 				branch_list.append(line)
