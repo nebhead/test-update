@@ -45,8 +45,13 @@ def get_available_branches():
 	branches = os.popen(command).readlines()
 	branch_list = []
 	for line in branches:
-		if('remotes' not in line):
-			branch_list.append(line.strip(' \n *'))
+		line = line.strip(' \n *')
+		if('remotes/origin/' in line):
+			line = line.replace('remotes/origin/', '')
+			if (line not in branch_list):
+				branch_list.append(line)
+		else:
+			branch_list.append(line)
 	return(branch_list)
 
 def get_branch():
