@@ -66,7 +66,7 @@ def default_settings():
 			 	'filename' : 'bootstrap-zephyr.css'
 			}
 		],
-		'version': '2022.1.2' 
+		'version': '2022.1.3' 
 	}
 
 	return settings
