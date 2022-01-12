@@ -107,12 +107,16 @@ def do_update():
 	git reset --hard HEAD
 	git merge '@{u}'
 	'''
-	command = "git fetch"
-	os.popen(command)
-	command = "git reset --hard HEAD"
-	os.popen(command)
-	command = "git merge '@\{u\}'"
-	output = os.popen(command).readlines()
+	remote = get_remote_url()
+	if('ERROR' not in remote):
+		command = "git fetch"
+		os.popen(command)
+		command = "git reset --hard HEAD"
+		os.popen(command)
+		command = "git merge '@\{u\}'"
+		output = os.popen(command).readlines()
+	else:
+		output = ['ERROR: No remote configured.']
 	return(output)
 
 def restart_scripts():
