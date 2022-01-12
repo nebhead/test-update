@@ -88,21 +88,24 @@ def get_available_updates(branch=''):
 	return(result)
 
 def do_update():
+	'''
+	Forced Update
+	git fetch
+	git reset --hard HEAD
+	git merge '@{u}'
+	'''
 	command = "git fetch"
 	os.popen(command)
-	command = "git merge"
-	mergeattempt = os.popen(command).readlines()
-	for line in mergeattempt:
-		print(f'{line}')
-		if('Failed' in line):
-			print('!!!!!!Failure detected.')
-		if('Success' in line):
-			print('!!!!!!Success')
+	command = "git reset --hard HEAD"
+	os.popen(command)
+	command = "git merge '@\{u\}'"
+	output = os.popen(command).readlines()
+	return(output)
 
 def restart_scripts():
-	print('Restarting Scripts... ')
-	command = "service supervisor restart"
-	os.popen(command)
+	print('[DEBUG MSG] Restarting Scripts... ')
+	command = "sleep 3 && service supervisor restart &"
+	#os.popen(command)
 
 def get_remote_url():
 	command = "git config --get remote.origin.url"

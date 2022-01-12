@@ -59,11 +59,14 @@ def settings_base(action=None):
 
 	return render_template('settings.html', alert=alert, settings=settings)
 
+'''
+Updater Section
+'''
+
 @app.route('/checkupdate', methods=['GET'])
 def checkupdate(action=None):
 	global settings
 	update_data = read_update_data()
-	print(f'Version: {settings["globals"]["version"]}')
 	if(update_data['version'] == ''):
 		update_data['version'] = settings['globals']['version']
 		write_update_data(update_data)
@@ -72,18 +75,15 @@ def checkupdate(action=None):
 		write_update_data(update_data)
 	if(update_data['remote_url'] == ''):
 		remote_url = get_remote_url()
-		if('ERROR' in remote_url):
-			print('f{remote_url}')
-		else:
-			update_data['remote_url'] = remote_url
-			write_update_data(update_data)
+		update_data['remote_url'] = remote_url
+		write_update_data(update_data)
 
 	avail_updates_struct = get_available_updates()
 
 	if(avail_updates_struct['success']): 
 		commits_behind = avail_updates_struct['commits_behind']
 	else:
-		return jsonify({'result' : 'failure'})
+		return jsonify({'result' : 'failure', 'message' : avail_updates_struct['message'] })
 
 	return jsonify({'result' : 'success', 'current' : update_data['version'], 'behind' : commits_behind})
 
@@ -105,8 +105,35 @@ def update_page(action=None):
 		'text' : ''
 		}
 
-	return render_template('updater.html', alert=alert, settings=settings, update_data=update_data)
+	if(request.method == 'POST'):
+		r = request.form 
+		print(f'POST Response: {r}')
 
+		if(r['change_branch'] == 'true'):
+			if(update_data['branch_target'] in r['branch_target']):
+				alert = { 
+					'type' : 'success', 
+					'text' : f'Current branch {update_data["branch_target"]} already set to {r["branch_target"]}'
+				}
+				return render_template('updater.html', alert=alert, settings=settings, update_data=update_data)
+			else: 
+				action = 'restart'
+				result = set_branch(r['branch_target'])
+				output_html = f'*** Changing from current branch {update_data["branch_target"]} to {r["branch_target"]} ***'
+				for line in result:
+					output_html += line.replace('\n', '<br>')
+					print(line)
+				print(output_html)
+				restart_scripts()
+				return render_template('updater_out.html', settings=settings, action=action, output_html=output_html)				
+
+		if(r['do_update'] == 'true'):
+			print('Update Requested')
+
+	return render_template('updater.html', alert=alert, settings=settings, update_data=update_data)
+'''
+End Updater Section
+'''
 
 @app.route('/admin/<action>', methods=['POST','GET'])
 @app.route('/admin', methods=['POST','GET'])
