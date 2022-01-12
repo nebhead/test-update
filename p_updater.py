@@ -70,21 +70,34 @@ def set_branch(branch_target):
 	result = os.popen(command).readlines() 
 	return(result)
 
+def get_remote_url():
+	command = "git config --get remote.origin.url"
+	remote = os.popen(command).readline()
+	if(remote):
+		return(remote.strip(' \n'))
+	else:
+		return('ERROR: Remote URL not specified in git config.')
+
 def get_available_updates(branch=''):
 	result = {}
-	if(branch == ''):
-		branch = get_branch()
-	command = "git fetch"
-	os.popen(command)
-	command = f"git rev-list --left-only --count origin/{branch}...@"
-	response = os.popen(command).readline()
-	response = response.strip(' \n')
-	if(response.isnumeric()):
-		result['success'] = True 
-		result['commits_behind'] = int(response)
+	remote = get_remote_url()
+	if('ERROR' not in remote):
+		if(branch == ''):
+			branch = get_branch()
+		command = "git fetch"
+		os.popen(command)
+		command = f"git rev-list --left-only --count origin/{branch}...@"
+		response = os.popen(command).readline()
+		response = response.strip(' \n')
+		if(response.isnumeric()):
+			result['success'] = True 
+			result['commits_behind'] = int(response)
+		else: 
+			result['success'] = False 
+			result['message'] = response 
 	else: 
 		result['success'] = False 
-		result['message'] = response 
+		result['message'] = 'ERROR: No remote defined.' 
 	return(result)
 
 def do_update():
@@ -107,10 +120,3 @@ def restart_scripts():
 	command = "sleep 3 && service supervisor restart &"
 	#os.popen(command)
 
-def get_remote_url():
-	command = "git config --get remote.origin.url"
-	remote = os.popen(command).readline()
-	if(remote):
-		return(remote.strip(' \n'))
-	else:
-		return('ERROR: Remote URL not specified in git config.')
