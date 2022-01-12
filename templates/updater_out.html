@@ -23,11 +23,11 @@
 		</div>
 		<div class="card-body">
 			<div class="alert alert-secondary" role="alert" style="font-family:courier;" id="output_window">
-				{{ output_html }}
+				{{ output_html|safe }} <br><br>
 				{% if "restart" in action %} 
-				Delaying 30 seconds for server reload...
+				Delaying <b id="countdown"></b> seconds for server reload...
 				{% elif "reboot" in action %}
-				Delaying 60 seconds for server reboot...
+				Delaying <b id="countdown"></b> seconds for server reboot...
 				{% endif %}
 			</div>
 		</div>
@@ -43,3 +43,27 @@
       </div>
     </div>
 {% endblock %}
+
+{% block scripts %} 
+<script>
+
+{% if action=='restart' %}
+	var countdown = 30;
+{% elif action=='reboot' %}
+	var countdown = 60;
+{% else %}
+	var countdown = 0;
+{% endif %}
+
+$(document).ready(function(){
+	countdownTimer = setInterval(function(){
+  		if(countdown <= 0){
+    		clearInterval(countdownTimer);
+  		};
+		$('#countdown').text(countdown);
+		countdown -= 1;
+	}, 1000);
+});
+
+</script>
+{% endblock %} 

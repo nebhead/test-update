@@ -119,7 +119,7 @@ def update_page(action=None):
 			else: 
 				action = 'restart'
 				result = set_branch(r['branch_target'])
-				output_html = f'*** Changing from current branch {update_data["branch_target"]} to {r["branch_target"]} ***'
+				output_html = f'*** Changing from current branch {update_data["branch_target"]} to {r["branch_target"]} ***<br><br>'
 				for line in result:
 					output_html += line.replace('\n', '<br>')
 					print(line)
