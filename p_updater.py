@@ -66,7 +66,7 @@ def get_branch():
 def set_branch(branch_target):
 	update_data = read_update_data()
 	update_data['branch_target'] = branch_target 
-	command = "git checkout branch_target"
+	command = f'git checkout {branch_target}'
 	result = os.popen(command).readlines() 
 	return(result)
 
