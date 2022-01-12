@@ -109,7 +109,7 @@ def update_page(action=None):
 		r = request.form 
 		print(f'POST Response: {r}')
 
-		if(r['change_branch'] == 'true'):
+		if('change_branch' in r):
 			if(update_data['branch_target'] in r['branch_target']):
 				alert = { 
 					'type' : 'success', 
@@ -127,8 +127,16 @@ def update_page(action=None):
 				restart_scripts()
 				return render_template('updater_out.html', settings=settings, action=action, output_html=output_html)				
 
-		if(r['do_update'] == 'true'):
+		if('do_update' in r):
 			print('Update Requested')
+			result = do_update() 
+			output_html = f'*** Attempting an update on {update_data["branch_target"]} ***<br><br>' 
+			for line in result:
+				output_html += line.replace('\n', '<br>')
+				print(line)
+			print(output_html)
+			restart_scripts()
+			return render_template('updater_out.html', settings=settings, action=action, output_html=output_html)
 
 	return render_template('updater.html', alert=alert, settings=settings, update_data=update_data)
 '''
