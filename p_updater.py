@@ -5,40 +5,7 @@ Update support functions to utilize Git/GitHub for live system updates
 '''
 
 import os
-import json
-
-def default_update_data(version='2022.1.0'):
-	update_data = {}
-	update_data['remote_url'] = get_remote_url()
-	update_data['branch_target'] = get_branch()
-	update_data['version'] = version
-	update_data['branches'] = get_available_branches()
-	return update_data
-
-def read_update_data():
-	"""
-		# Read update data/settings from JSON
-	"""
-	try:
-		json_data_file = open("updater.json", "r")
-		json_data_string = json_data_file.read()
-		update_data = json.loads(json_data_string)
-		json_data_file.close()
-
-	except(IOError, OSError):
-		# Issue with reading settings JSON, so create one/write new one
-		update_data = default_update_data()
-		write_update_data(update_data)
-
-	return(update_data)
-
-def write_update_data(update_data):
-	"""
-		# Write settings from JSON
-	"""
-	json_data_string = json.dumps(update_data, indent=2, sort_keys=True)
-	with open("updater.json", 'w') as data_file:
-	    data_file.write(json_data_string)
+import time
 
 def get_available_branches():
 	command = "git branch -a"
@@ -64,10 +31,9 @@ def get_branch():
 	return(branch)
 
 def set_branch(branch_target):
-	update_data = read_update_data()
-	update_data['branch_target'] = branch_target 
 	command = f'git checkout {branch_target}'
 	result = os.popen(command).readlines() 
+	time.sleep(1)
 	return(result)
 
 def get_remote_url():
@@ -88,6 +54,7 @@ def get_available_updates(branch=''):
 		os.popen(command)
 		command = f"git rev-list --left-only --count origin/{branch}...@"
 		response = os.popen(command).readline()
+		time.sleep(1)
 		response = response.strip(' \n')
 		if(response.isnumeric()):
 			result['success'] = True 
@@ -115,6 +82,7 @@ def do_update():
 		os.popen(command)
 		command = "git merge \'@{u}\'"
 		output = os.popen(command).readlines()
+		time.sleep(1)
 	else:
 		output = ['ERROR: No remote configured.']
 	return(output)
