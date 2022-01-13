@@ -43,16 +43,14 @@
 			</div>
 		</div>
 		<div id="update_available" style="display:none">
-			<div id="update_available" style="display:none">
+			<form method="POST" action=/update>
 				<div class="d-grid gap-2">
-					<h1><i class="fas fa-cloud-download-alt"></i></h1>
-					<h4><strong>An update is available!</strong></h4>
-					You are currently <i id="commits_behind"></i> changes behind the latest on this branch. <br>
-				</div>
-			</div>
-			<form method="POST" action="/update">
-				<div class="d-grid gap-2"> 
-					<a href="/update" class="btn btn-success shadow" role="button">Go to the Updater</a>
+					<a href="/update" class="btn btn-success btn-block shadow" data-bs-toggle="modal" data-bs-target="#updateModal">
+						<h1><i class="fas fa-cloud-download-alt"></i></h1>
+						<h4><strong>An update is available!</strong></h4>
+						You are currently <i id="commits_behind"></i> changes behind the latest on this branch. <br>
+						Click Here to go to the Updater
+					</a>
 					<button type="submit" class="btn btn-outline-success btn-block shadow" name="show_log" id="show_log" value="true">Show Changes</button>
 				</div>
 			</form>
