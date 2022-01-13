@@ -104,11 +104,6 @@ def read_settings(filename='settings.json'):
 	# Overlay the read values over the top of the default settings
 	#  This ensures that any NEW fields are captured.  
 	update_settings = False # set flag in case an update needs to be written back
-
-	# If default version is different from what is currently saved, update version in saved settings
-	if(settings_struct['versions']['server'] != settings['versions']['server']):
-		settings_struct['versions']['server'] = settings['versions']['server']
-		update_settings = True
 	
 	for key in settings.keys():
 		if key in settings_struct.keys():
@@ -118,6 +113,11 @@ def read_settings(filename='settings.json'):
 			settings[key].update(settings_struct.get(key, {}))
 		else: 
 			update_settings = True 
+
+	# If default version is different from what is currently saved, update version in saved settings
+	if(settings_struct['versions']['server'] != settings['versions']['server']):
+		settings_struct['versions']['server'] = settings['versions']['server']
+		update_settings = True
 
 	if (update_settings) or (filename != 'settings.json'): # If any of the keys were added, then write back the changes 
 		write_settings(settings)
