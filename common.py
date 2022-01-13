@@ -13,6 +13,8 @@
 import datetime
 import json
 import io
+import os 
+from p_logging import write_log
 
 def default_settings():
 	settings = {}
@@ -65,27 +67,61 @@ def default_settings():
 				'name' : 'Zephyr',
 			 	'filename' : 'bootstrap-zephyr.css'
 			}
-		],
-		'version': '2022.1.7' 
+		]
+	}
+
+	settings['versions'] = {
+		'server' : '1.0.0'
 	}
 
 	return settings
 
-def read_settings():
+def read_settings(filename='settings.json'):
 	"""
 		# Read settings from JSON
 	"""
+	# Get latest settings format
+	settings = default_settings()
+
 	try:
-		json_data_file = open("settings.json", "r")
+		json_data_file = os.fdopen(os.open(filename, os.O_RDONLY))
 		json_data_string = json_data_file.read()
-		settings = json.loads(json_data_string)
+		settings_struct = json.loads(json_data_string)
 		json_data_file.close()
 
 	except(IOError, OSError):
-		# Issue with reading settings JSON, so create one/write new one
-		settings = default_settings()
+		# Issue with reading states JSON, so create one/write new one
 		write_settings(settings)
+		return(settings)
+	except(ValueError):
+		# A ValueError Exception occurs when multiple accesses collide, this code attempts a retry.
+		event = 'ERROR: Value Error Exception - JSONDecodeError reading settings.json'
+		write_log(event, logtype='ERROR')
+		json_data_file.close()
+		# Retry Reading Settings
+		settings_struct = read_settings(filename=filename) 
 
+	# Overlay the read values over the top of the default settings
+	#  This ensures that any NEW fields are captured.  
+	update_settings = False # set flag in case an update needs to be written back
+
+	# If default version is different from what is currently saved, update version in saved settings
+	if(settings_struct['versions']['server'] != settings['versions']['server']):
+		settings_struct['versions']['server'] = settings['versions']['server']
+		update_settings = True
+	
+	for key in settings.keys():
+		if key in settings_struct.keys():
+			for subkey in settings[key].keys():
+				if subkey not in settings_struct[key].keys():
+					update_settings = True
+			settings[key].update(settings_struct.get(key, {}))
+		else: 
+			update_settings = True 
+
+	if (update_settings) or (filename != 'settings.json'): # If any of the keys were added, then write back the changes 
+		write_settings(settings)
+	
 	return(settings)
 
 def write_settings(settings):

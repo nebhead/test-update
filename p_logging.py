@@ -24,12 +24,12 @@ def read_log(num_events=0, twentyfourhtime=True):
 
 	# Read all lines of events.log into an list(array)
 	try:
-		with open('events.log') as event_file:
+		with open('./logs/events.log') as event_file:
 			event_lines = event_file.readlines()
 			event_file.close()
 	# If file not found error, then create events.log file
 	except(IOError, OSError):
-		event_file = open('events.log', "w")
+		event_file = open('./logs/events.log', "w")
 		event_file.close()
 		event_lines = []
 
@@ -68,7 +68,7 @@ def write_log(event, logtype='NONE'):
 	now = str(datetime.datetime.now())
 	now = now[0:19] # Truncate the microseconds
 
-	logfile = open("events.log", "a")
+	logfile = open("./logs/events.log", "a")
 	output = now + ' ' + '[' + logtype.upper() + '] ' + event + '\n'
 	logfile.write(output)
 	logfile.close()

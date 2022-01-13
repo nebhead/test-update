@@ -67,7 +67,7 @@ Updater Section
 def checkupdate(action=None):
 	global settings
 	update_data = {}
-	update_data['version'] = settings['globals']['version']
+	update_data['version'] = settings['versions']['server']
 	update_data['branch_target'] = get_branch()
 	update_data['remote_url'] = get_remote_url()
 
@@ -76,6 +76,8 @@ def checkupdate(action=None):
 	if(avail_updates_struct['success']): 
 		commits_behind = avail_updates_struct['commits_behind']
 	else:
+		event = avail_updates_struct['message']
+		write_log(event, 'ERROR')
 		return jsonify({'result' : 'failure', 'message' : avail_updates_struct['message'] })
 
 	return jsonify({'result' : 'success', 'current' : update_data['version'], 'behind' : commits_behind})
@@ -86,7 +88,7 @@ def update_page(action=None):
 
 	# Populate Update Data Structure
 	update_data = {}
-	update_data['version'] = settings['globals']['version']
+	update_data['version'] = settings['versions']['server']
 	update_data['branch_target'] = get_branch()
 	update_data['branches'] = get_available_branches()
 	update_data['remote_url'] = get_remote_url()

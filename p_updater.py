@@ -64,7 +64,7 @@ def get_available_updates(branch=''):
 			result['message'] = response 
 	else: 
 		result['success'] = False 
-		result['message'] = 'ERROR: No remote defined.' 
+		result['message'] = 'ERROR: No remote repository defined.  You may need to re-install from the remote repository.' 
 	return(result)
 
 def do_update():
