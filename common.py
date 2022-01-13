@@ -71,7 +71,7 @@ def default_settings():
 	}
 
 	settings['versions'] = {
-		'server' : '1.0.0'
+		'server' : '1.0.1'
 	}
 
 	return settings
