@@ -107,7 +107,9 @@ def read_settings(filename='settings.json'):
 
 	# If default version is different from what is currently saved, update version in saved settings
 	if('versions' not in settings_struct.keys()):
-		settings_struct['versions']['server'] = settings['versions']['server']
+		settings_struct['versions'] = {
+			'server' : settings['versions']['server']
+		}
 		update_settings = True
 	elif(settings_struct['versions']['server'] != settings['versions']['server']):
 		settings_struct['versions']['server'] = settings['versions']['server']
