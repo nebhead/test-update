@@ -133,7 +133,8 @@
 			<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
 		</div>
 		<div class="modal-body">
-			Changing branches will require a restart of the server.  Are you sure you want to change the branch?  
+			Changing branches will force a restart of the server.  This operation will stash any code changes that have not been committed.
+			<br><br>Are you sure you want to change the branch?  
 		</div>
 		<div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
@@ -155,8 +156,8 @@
 		</div>
 		<div class="modal-body">
 			Downloading and updating to the latest version from the <b>{{ update_data['branch_target'] }}</b> branch 
-			will destory any code changes that might have been made(settings changes will be preserved). 
-			After the update, the server will be restarted.  
+			will destory any <strong>code</strong> changes that might have been made. <i>(settings changes will be preserved)</i><br><br> 
+			<strong>NOTE: </strong>After the update, the server will be restarted.  
 		</div>
 		<div class="modal-footer">
 			<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
