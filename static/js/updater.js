@@ -5,14 +5,15 @@ $(document).ready(function(){
 	});
 	req.done(function(data) {
 		if(data['result'] != 'success') {
-			console.log(data)
+			//console.log(data)
 			$('#update_checking').hide();
 			$('#update_failed').show();
 		} else {
-			console.log(data)
+			//console.log(data)
 			if(data['behind'] != 0) {
 				$('#update_checking').hide();
 				$('#commits_behind').html(data['behind']);
+				$('#show_log').val(data['behind']);
 				$('#update_available').show();
 			} else {
 				$('#update_checking').hide();
@@ -32,14 +33,15 @@ $( "#check_for_update" ).click(function() {
 	});
 	req.done(function(data) {
 		if(data['result'] != 'success') {
-			console.log(data)
+			//console.log(data)
 			$('#update_checking').hide();
 			$('#update_failed').show();
 		} else {
-			console.log(data)
+			//console.log(data)
 			if(data['behind'] != 0) {
 				$('#update_checking').hide();
 				$('#commits_behind').html(data['behind']);
+				$('#show_log').val(data['behind']);
 				$('#update_available').show();
 			} else {
 				$('#update_checking').hide();

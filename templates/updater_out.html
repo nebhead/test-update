@@ -40,25 +40,25 @@
 {% endblock %}
 
 {% block scripts %} 
-<script>
 
-{% if action=='restart' %}
-	var countdown = 30;
-{% elif action=='reboot' %}
-	var countdown = 60;
-{% else %}
-	var countdown = 0;
-{% endif %}
+	{% if action=='restart' or action=='reboot' %}
+		<script>
+		{% if action=='restart' %}
+			var countdown = 30;
+		{% elif action=='reboot' %}
+			var countdown = 60;
+		{% endif %}
 
-$(document).ready(function(){
-	countdownTimer = setInterval(function(){
-  		if(countdown <= 0){
-    		clearInterval(countdownTimer);
-  		};
-		$('#countdown').text(countdown);
-		countdown -= 1;
-	}, 1000);
-});
+		$(document).ready(function(){
+			countdownTimer = setInterval(function(){
+				if(countdown <= 0){
+					clearInterval(countdownTimer);
+				};
+				$('#countdown').text(countdown);
+				countdown -= 1;
+			}, 1000);
+		});
+		</script>
+	{% endif %}
 
-</script>
 {% endblock %} 

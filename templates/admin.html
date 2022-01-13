@@ -50,9 +50,12 @@
 					You are currently <i id="commits_behind"></i> changes behind the latest on this branch. <br>
 				</div>
 			</div>
-			<div class="d-grid gap-2"> 
-				<a href="/update" class="btn btn-success shadow" role="button">Go to the Updater</a>
-			</div>
+			<form method="POST" action="/update">
+				<div class="d-grid gap-2"> 
+					<a href="/update" class="btn btn-success shadow" role="button">Go to the Updater</a>
+					<button type="submit" class="btn btn-outline-success btn-block shadow" id="show_log" value="true">Show Changes</button>
+				</div>
+			</form>
 		</div>
 		<div id="update_failed" style="display:none">
 			<div class="alert alert-danger fade show" role="alert">
@@ -60,7 +63,7 @@
 				<strong>Error!</strong> The update check failed for some reason. Check your logs.
 			</div>
 			<div class="d-grid gap-2">
-				<a href="/update" class="btn btn-warning shadow" role="button">Get more info in the Updater</a>
+				<a href="/update" class="btn btn-outline-danger shadow" role="button">Get more info in the Updater</a>
 			</div>
 		</div>
 		<div id="update_current" style="display:none">
@@ -69,7 +72,7 @@
 				<strong>You are up to date!</strong>
 			</div>
 			<div class="d-grid gap-2"> 
-				<a href="/update" class="btn btn-info shadow" role="button">Go to the Updater Anyway</a>
+				<a href="/update" class="btn btn-outline-info shadow" role="button">Change branch in Updater</a>
 			</div>
 		</div>
 	</div>
@@ -199,22 +202,21 @@
 <!-- Updater Script -->
 <script> 
 	$(document).ready(function(){
-		//console.log('Enabled!')
 		req = $.ajax({
 			url : '/checkupdate',
 			type : 'GET'
 		});
 		req.done(function(data) {
 			if(data['result'] != 'success') {
-				console.log(data)
+				//console.log(data)
 				$('#update_checking').hide();
 				$('#update_failed').show();
 			} else {
-				console.log(data)
+				//console.log(data)
 				if(data['behind'] != 0) {
-					var status_string = 'Your system is ' + data['behind'] + ' commits behind.';
 					$('#update_checking').hide();
-					$('#update_available').html(status_string);
+					$('#commits_behind').html(data['behind']);
+					$('#show_log').val(data['behind']);
 					$('#update_available').show();
 				} else {
 					$('#update_checking').hide();

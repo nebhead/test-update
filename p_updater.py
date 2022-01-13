@@ -92,3 +92,8 @@ def restart_scripts():
 	command = "sleep 3 && service supervisor restart &"
 	#os.popen(command)
 
+def get_log(num_commits=10):
+	branch = get_branch()
+	command = f'git log origin/{branch} -{num_commits} --pretty="%h - %cr : %s"'
+	output = os.popen(command).readlines()
+	return(output)

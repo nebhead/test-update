@@ -133,6 +133,20 @@ def update_page(action=None):
 			restart_scripts()
 			return render_template('updater_out.html', settings=settings, action=action, output_html=output_html)
 
+		if('show_log' in r):
+			print('Log requested')
+			if(r['show_log'].isnumeric()):
+				action='log'
+				result = get_log(num_commits=int(r['show_log']))
+				output_html = f'*** Getting latest updates from origin/{update_data["branch_target"]} ***<br><br>' 
+				for line in result:
+					if('fatal' in line): 
+						output_html += 'Fatal Error: Issue with getting log information from remote branch.'
+					output_html += line.replace('\n', '<br>')
+					print(line)
+				print(output_html)
+				return render_template('updater_out.html', settings=settings, action=action, output_html=output_html)
+
 	return render_template('updater.html', alert=alert, settings=settings, update_data=update_data)
 '''
 End Updater Section
