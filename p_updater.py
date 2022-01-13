@@ -113,7 +113,7 @@ def do_update():
 		os.popen(command)
 		command = "git reset --hard HEAD"
 		os.popen(command)
-		command = "git merge '@\{u\}'"
+		command = "git merge \'@{u}\'"
 		output = os.popen(command).readlines()
 	else:
 		output = ['ERROR: No remote configured.']
