@@ -48,3 +48,7 @@ $( "#check_for_update" ).click(function() {
 		};
 	});
 });
+
+$( "#check_for_update_2" ).click(function() {
+	$( "#check_for_update" ).click();
+});
