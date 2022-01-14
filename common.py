@@ -157,3 +157,9 @@ def is_raspberrypi():
 			if 'raspberry pi' in m.read().lower(): return True
 	except Exception: pass
 	return False
+
+def restart_scripts():
+	print('[DEBUG MSG] Restarting Scripts... ')
+	command = "sleep 3 && service supervisor restart &"
+	if(is_raspberrypi()):
+		os.popen(command)

@@ -87,13 +87,16 @@ def do_update():
 		output = ['ERROR: No remote configured.']
 	return(output)
 
-def restart_scripts():
-	print('[DEBUG MSG] Restarting Scripts... ')
-	command = "sleep 3 && service supervisor restart &"
-	#os.popen(command)
-
 def get_log(num_commits=10):
 	branch = get_branch()
 	command = f'git log origin/{branch} -{num_commits} --pretty="%h - %cr : %s"'
 	output = os.popen(command).readlines()
+	return(output)
+
+def get_remote_version():
+	remote_url = get_remote_url()
+	# Reference command: git ls-remote --tags --sort="v:refname" git://github.com/nebhead/test-update.git | tail -n1 | sed "s/.*\\///;"
+	# Gets a list of the remote hashes/tags sorted by version, then takes the last (tail) and processes the output to remove the hash and ref/tags/
+	command = f'git ls-remote --tags --sort="v:refname" {remote_url} | tail -n1 | sed "s/.*\\///;"'
+	output = os.popen(command).readline()
 	return(output)

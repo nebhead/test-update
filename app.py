@@ -68,8 +68,6 @@ def checkupdate(action=None):
 	global settings
 	update_data = {}
 	update_data['version'] = settings['versions']['server']
-	update_data['branch_target'] = get_branch()
-	update_data['remote_url'] = get_remote_url()
 
 	avail_updates_struct = get_available_updates()
 
@@ -92,6 +90,7 @@ def update_page(action=None):
 	update_data['branch_target'] = get_branch()
 	update_data['branches'] = get_available_branches()
 	update_data['remote_url'] = get_remote_url()
+	update_data['remote_version'] = get_remote_version()
 
 	# Create Alert Structure for Alert Notification
 	alert = { 
