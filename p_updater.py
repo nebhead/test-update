@@ -8,7 +8,7 @@ import os
 import time
 
 def get_available_branches():
-	command = "git branch -a"
+	command = "sudo git branch -a"
 	branches = os.popen(command).readlines()
 	branch_list = []
 	for line in branches:
@@ -28,7 +28,7 @@ def get_branch():
 #	--show-current is only in later versions of git, and unfortunatly buster does not have this
 #	command = "git branch --show-current"
 #	branch = os.popen(command).readline()
-	command = "git branch -a"
+	command = "sudo git branch -a"
 	branches = os.popen(command).readlines()
 	branch = ''
 	for line in branches:
@@ -38,13 +38,13 @@ def get_branch():
 	return(branch)
 
 def set_branch(branch_target):
-	command = f'git checkout -f {branch_target}'
+	command = f'sudo git checkout -f {branch_target}'
 	result = os.popen(command).readlines() 
 	time.sleep(1)
 	return(result)
 
 def get_remote_url():
-	command = "git config --get remote.origin.url"
+	command = "sudo git config --get remote.origin.url"
 	remote = os.popen(command).readline()
 	if(remote):
 		return(remote.strip(' \n'))
@@ -57,9 +57,9 @@ def get_available_updates(branch=''):
 	if('ERROR' not in remote):
 		if(branch == ''):
 			branch = get_branch()
-		command = "git fetch"
+		command = "sudo git fetch"
 		os.popen(command)
-		command = f"git rev-list --left-only --count origin/{branch}...@"
+		command = f"sudo git rev-list --left-only --count origin/{branch}...@"
 		response = os.popen(command).readline()
 		time.sleep(1)
 		response = response.strip(' \n')
@@ -83,11 +83,11 @@ def do_update():
 	'''
 	remote = get_remote_url()
 	if('ERROR' not in remote):
-		command = "git fetch"
+		command = "sudo git fetch"
 		os.popen(command)
-		command = "git reset --hard HEAD"
+		command = "sudo git reset --hard HEAD"
 		os.popen(command)
-		command = "git merge \'@{u}\'"
+		command = "sudo git merge \'@{u}\'"
 		output = os.popen(command).readlines()
 		time.sleep(1)
 	else:
