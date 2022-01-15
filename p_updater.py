@@ -31,7 +31,7 @@ def get_branch():
 	return(branch)
 
 def set_branch(branch_target):
-	command = f'git checkout {branch_target}'
+	command = f'git checkout -f {branch_target}'
 	result = os.popen(command).readlines() 
 	time.sleep(1)
 	return(result)

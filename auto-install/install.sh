@@ -84,6 +84,9 @@ echo "*************************************************************************"
 # TODO Uncomment for production
 git clone https://github.com/nebhead/test-update
 
+# Create a logs folder
+$SUDO mkdir /home/pi/test-update/logs
+
 ### Setup nginx to proxy to gunicorn
 clear
 echo "*************************************************************************"
@@ -91,14 +94,14 @@ echo "**                                                                     **"
 echo "**      Configuring nginx...                                           **"
 echo "**                                                                     **"
 echo "*************************************************************************"
-# Move into garage-zero install directory
-cd ~/test-update/auto-install
+# Move into software install directory
+cd /home/pi/test-update/auto-install
 
 # Delete default configuration
 $SUDO rm /etc/nginx/sites-enabled/default
 
 # Copy configuration file to nginx
-$SUDO cp webui.nginx /etc/nginx/sites-available/webui.nginx
+$SUDO cp webui.nginx /etc/nginx/sites-available/webui
 
 # Create link in sites-enabled
 $SUDO ln -s /etc/nginx/sites-available/webui /etc/nginx/sites-enabled
@@ -106,7 +109,7 @@ $SUDO ln -s /etc/nginx/sites-available/webui /etc/nginx/sites-enabled
 # Restart nginx
 $SUDO service nginx restart
 
-### Setup Supervisor to Start GarageZero on Boot / Restart on Failures
+### Setup Supervisor to Start Software on Boot / Restart on Failures
 clear
 echo "*************************************************************************"
 echo "**                                                                     **"
@@ -115,8 +118,7 @@ echo "**                                                                     **"
 echo "*************************************************************************"
 
 # Copy configuration files (control.conf, webapp.conf) to supervisor config directory
-# NOTE: If you used a different directory for garage-zero then make sure you edit the *.conf files appropriately
-$SUDO cd ~/test-update/supervisor/
+$SUDO cd /home/pi/test-update/supervisor/
 $SUDO cp *.conf /etc/supervisor/conf.d/
 
 SVISOR=$(whiptail --title "Would you like to enable the supervisor WebUI?" --radiolist "This allows you to check the status of the supervised processes via a web browser, and also allows those processes to be restarted directly from this interface. (Recommended)" 20 78 2 "ENABLE_SVISOR" "Enable the WebUI" ON "DISABLE_SVISOR" "Disable the WebUI" OFF 3>&1 1>&2 2>&3)
