@@ -25,9 +25,16 @@ def get_available_branches():
 	return(branch_list)
 
 def get_branch():
-	command = "git branch --show-current"
-	branch = os.popen(command).readline()
-	branch = branch.strip(' \n')
+#	--show-current is only in later versions of git, and unfortunatly buster does not have this
+#	command = "git branch --show-current"
+#	branch = os.popen(command).readline()
+	command = "git branch -a"
+	branches = os.popen(command).readlines()
+	branch = ''
+	for line in branches:
+		if('*' in line):
+			branch = line.strip(' \n *')
+			break
 	return(branch)
 
 def set_branch(branch_target):
