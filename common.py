@@ -71,7 +71,7 @@ def default_settings():
 	}
 
 	settings['versions'] = {
-		'server' : '1.0.9'
+		'server' : 'v1.1.0'
 	}
 
 	return settings
@@ -160,6 +160,6 @@ def is_raspberrypi():
 
 def restart_scripts():
 	print('[DEBUG MSG] Restarting Scripts... ')
-	command = "sleep 3 && service supervisor restart &"
+	command = "sleep 3 && sudo service supervisor restart &"
 	if(is_raspberrypi()):
 		os.popen(command)
