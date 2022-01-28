@@ -87,10 +87,18 @@ def update_page(action=None):
 	# Populate Update Data Structure
 	update_data = {}
 	update_data['version'] = settings['versions']['server']
-	update_data['branch_target'] = get_branch()
-	update_data['branches'] = get_available_branches()
-	update_data['remote_url'] = get_remote_url()
-	update_data['remote_version'] = get_remote_version()
+	update_data['branch_target'], error_msg = get_branch()
+	if error_msg != '':
+		write_log(error_msg, 'ERROR')
+	update_data['branches'], error_msg = get_available_branches()
+	if error_msg != '':
+		write_log(error_msg, 'ERROR')
+	update_data['remote_url'], error_msg = get_remote_url()
+	if error_msg != '':
+		write_log(error_msg, 'ERROR')
+	update_data['remote_version'], error_msg = get_remote_version()
+	if error_msg != '':
+		write_log(error_msg, 'ERROR')
 
 	# Create Alert Structure for Alert Notification
 	alert = { 
@@ -110,41 +118,49 @@ def update_page(action=None):
 				}
 				return render_template('updater.html', alert=alert, settings=settings, update_data=update_data)
 			else: 
-				action = 'restart'
-				result = set_branch(r['branch_target'])
-				output_html = f'*** Changing from current branch {update_data["branch_target"]} to {r["branch_target"]} ***<br><br>'
-				for line in result:
-					output_html += line.replace('\n', '<br>')
-					print(line)
-				print(output_html)
-				restart_scripts()
+				result, error_msg = set_branch(r['branch_target'])
+				if error_msg == '':
+					action = 'restart'
+					output_html = f'*** Changing from current branch {update_data["branch_target"]} to {r["branch_target"]} ***<br><br>'
+					output_html += result 
+					restart_scripts()
+				else:
+					action = ''
+					output_html = f'*** Changing from current branch {update_data["branch_target"]} to {r["branch_target"]} Experienced Errors ***<br><br>'
+					output_html += error_msg
+
 				return render_template('updater_out.html', settings=settings, action=action, output_html=output_html)				
 
 		if('do_update' in r):
 			print('Update Requested')
-			action='restart'
-			result = do_update() 
-			output_html = f'*** Attempting an update on {update_data["branch_target"]} ***<br><br>' 
-			for line in result:
-				output_html += line.replace('\n', '<br>')
-				print(line)
-			print(output_html)
-			restart_scripts()
+
+			result, error_msg = do_update() 
+			if error_msg == '':
+				action='restart'
+				output_html = f'*** Attempting an update on {update_data["branch_target"]} ***<br><br>' 
+				output_html += result 
+				restart_scripts()
+			else:
+				action=''
+				output_html = f'*** Attempting an update on {update_data["branch_target"]} ***<br><br>' 
+				output_html += error_msg
 			return render_template('updater_out.html', settings=settings, action=action, output_html=output_html)
 
 		if('show_log' in r):
 			print('Log requested')
 			if(r['show_log'].isnumeric()):
 				action='log'
-				result = get_log(num_commits=int(r['show_log']))
-				output_html = f'*** Getting latest updates from origin/{update_data["branch_target"]} ***<br><br>' 
-				for line in result:
-					if('fatal' in line): 
-						output_html += 'Fatal Error: Issue with getting log information from remote branch.'
-					output_html += line.replace('\n', '<br>')
-					print(line)
-				print(output_html)
-				return render_template('updater_out.html', settings=settings, action=action, output_html=output_html)
+				result, error_msg = get_log(num_commits=int(r['show_log']))
+				if error_msg == '':
+					output_html = f'*** Getting latest updates from origin/{update_data["branch_target"]} ***<br><br>' 
+					output_html += result
+				else: 
+					output_html = f'*** Getting latest updates from origin/{update_data["branch_target"]} ERROR Occurred ***<br><br>' 
+					output_html += error_msg
+			else:
+				output_html = '*** Error, Number of Commits Not Defined! ***<br><br>'
+				
+			return render_template('updater_out.html', settings=settings, action=action, output_html=output_html)
 
 	return render_template('updater.html', alert=alert, settings=settings, update_data=update_data)
 '''
