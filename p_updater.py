@@ -124,7 +124,7 @@ def get_log(num_commits=10):
 		command = ['git', 'log', f'origin/{branch}', f'-{num_commits}', '--pretty="%h - %cr : %s"']
 		log = subprocess.run(command, capture_output=True, text=True)
 		if log.stderr == '':
-			result = log.stdout.replace('\n', '<br>')
+			result = log.stdout.replace('\n', '<br>').replace('"', '')
 		else: 
 			result = 'ERROR Getting Log.'
 			error_msg = log.stderr.replace('\n', '<br>')
