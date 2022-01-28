@@ -50,8 +50,8 @@ def set_branch(branch_target):
 	target = subprocess.run(command, capture_output=True, text=True)
 	error_msg = ''
 	result = ''
-	if(target.stderr == ''):
-		result = target.stdout.replace('\n', '<br>')
+	if(target.returncode == 0):
+		result = target.stdout.replace('\n', '<br>') + target.stderr.replace('\n', '<br>')
 	else: 
 		result = 'ERROR Setting Branch'
 		error_msg = target.stderr.replace('\n', '<br>')
