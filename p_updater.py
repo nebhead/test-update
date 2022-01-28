@@ -11,7 +11,7 @@ def get_available_branches():
 	branches = subprocess.run(command, capture_output=True, text=True)
 	branch_list = []
 	error_msg = ''
-	if(branches.stderr == ''):
+	if(branches.returncode == 0):
 		input_list = branches.stdout.split("\n")
 		for line in input_list:
 			line = line.strip(' *')
@@ -34,7 +34,7 @@ def get_branch():
 	branches = subprocess.run(command, capture_output=True, text=True)
 	error_msg = ''
 	result = ''
-	if(branches.stderr == ''):
+	if(branches.returncode == 0):
 		input_list = branches.stdout.split("\n")
 		for line in input_list:
 			if('*' in line):
@@ -62,7 +62,7 @@ def get_remote_url():
 	remote = subprocess.run(command, capture_output=True, text=True)
 	error_msg = ''
 	result = ''
-	if(remote.stderr == ''):
+	if(remote.returncode == 0):
 		result = remote.stdout.strip(' \n')
 	else:
 		result = 'ERROR Retrieving URL'
@@ -71,17 +71,19 @@ def get_remote_url():
 
 def get_available_updates(branch=''):
 	result = {}
-	remote, error_msg = get_remote_url()
+	remote, error_msg1 = get_remote_url()
 	if(branch == ''):
-		branch, error_msg = get_branch()
+		branch, error_msg2 = get_branch()
 
 	if('ERROR' not in remote) and ('ERROR' not in branch):
 		command = ['git', 'fetch']
 		fetch = subprocess.run(command, capture_output=True, text=True)
 		command = ['git', 'rev-list', '--left-only', '--count', f'origin/{branch}...@']
 		revlist = subprocess.run(command, capture_output=True, text=True)
+		#print(f'revlist.returncode = {revlist.returncode}')
+		#print(f'fetch.returncode = {fetch.returncode}')
 
-		if revlist.stderr == '':
+		if (revlist.returncode == 0) and (fetch.returncode == 0):
 			revlist = revlist.stdout.strip(' \n')
 			if(revlist.isnumeric()):
 				result['success'] = True 
@@ -91,10 +93,10 @@ def get_available_updates(branch=''):
 				result['message'] = revlist 
 		else: 
 			result['success'] = False 
-			result['message'] = 'ERROR: ' + revlist.stderr.replace('\n', ' ') 
+			result['message'] = 'ERROR Getting Revision List: ' + revlist.stderr.replace('\n', ' ') + revlist.stdout.replace('\n', ' ')
 	else:
 		result['success'] = False 
-		result['message'] = 'ERROR: ' + error_msg 
+		result['message'] = 'ERROR Getting Remote or Branch: ' + error_msg1 + ' ' + error_msg2
 	return(result)
 
 def do_update():
@@ -109,7 +111,7 @@ def do_update():
 		merge = subprocess.run(command, capture_output=True, text=True)
 		error_msg = ''
 		result = ''
-		if(fetch.stderr == '') and (reset.stderr == '') and (merge.stderr == ''):
+		if(fetch.returncode == 0) and (reset.returncode == 0) and (merge.returncode == 0):
 			result = fetch.stdout.replace('\n', '<br>') + '<br>' + reset.stdout.replace('\n', '<br>') + '<br>' + merge.stdout.replace('\n', '<br>')
 		else: 
 			result = 'ERROR Performing Update.'
@@ -123,7 +125,7 @@ def get_log(num_commits=10):
 	if error_msg == '':
 		command = ['git', 'log', f'origin/{branch}', f'-{num_commits}', '--pretty="%h - %cr : %s"']
 		log = subprocess.run(command, capture_output=True, text=True)
-		if log.stderr == '':
+		if log.returncode == 0:
 			result = log.stdout.replace('\n', '<br>').replace('"', '')
 		else: 
 			result = 'ERROR Getting Log.'
@@ -139,7 +141,7 @@ def get_remote_version():
 		# Gets a list of the remote hashes/tags sorted by version, then takes the last (tail) and processes the output to remove the hash and ref/tags/
 		command = ['git', 'ls-remote', '--tags', '--sort=v:refname', remote_url]
 		versions = subprocess.run(command, capture_output=True, text=True)
-		if versions.stderr == '':
+		if versions.returncode == 0:
 			versionlist = versions.stdout.split('\n')  # Make a list of versions from the output
 			result = versionlist[-2]  # Get the last version from the sorted version list (-1 is actually an empty string, so go -2 to get the last item)
 			result = result.split("refs/tags/",1)[1]  # Trickery to split the string after "refs/tags/" to get the version suffix
