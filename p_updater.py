@@ -140,7 +140,7 @@ def get_remote_version():
 		versions = subprocess.run(command, capture_output=True, text=True)
 		if versions.stderr == '':
 			versionlist = versions.stdout.split('\n')  # Make a list of versions from the output
-			result = versionlist[-1]  # Get the last version from the sorted version list
+			result = versionlist[-2]  # Get the last version from the sorted version list (-1 is actually an empty string, so go -2 to get the last item)
 			result = result.split("refs/tags/",1)[1]  # Trickery to split the string after "refs/tags/" to get the version suffix
 		else: 
 			result = "ERROR Getting Remote Version."
