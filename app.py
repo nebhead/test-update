@@ -108,7 +108,6 @@ def update_page(action=None):
 
 	if(request.method == 'POST'):
 		r = request.form 
-		print(f'POST Response: {r}')
 
 		if('change_branch' in r):
 			if(update_data['branch_target'] in r['branch_target']):
@@ -132,8 +131,6 @@ def update_page(action=None):
 				return render_template('updater_out.html', settings=settings, action=action, output_html=output_html)				
 
 		if('do_update' in r):
-			print('Update Requested')
-
 			result, error_msg = do_update() 
 			if error_msg == '':
 				action='restart'
@@ -147,7 +144,6 @@ def update_page(action=None):
 			return render_template('updater_out.html', settings=settings, action=action, output_html=output_html)
 
 		if('show_log' in r):
-			print('Log requested')
 			if(r['show_log'].isnumeric()):
 				action='log'
 				result, error_msg = get_log(num_commits=int(r['show_log']))

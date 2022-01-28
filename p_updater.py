@@ -98,13 +98,14 @@ def get_available_updates(branch=''):
 	return(result)
 
 def do_update():
-	remote, error_msg = get_remote_url()
-	if error_msg == '':
+	branch, error_msg1 = get_branch()
+	remote, error_msg2 = get_remote_url()
+	if (error_msg1 == '') and (error_msg2 == ''):
 		command = ['git', 'fetch']
 		fetch = subprocess.run(command, capture_output=True, text=True)
 		command = ['git', 'reset', '--hard', 'HEAD']
 		reset = subprocess.run(command, capture_output=True, text=True)
-		command = ['git', 'merge', '\'@{u}\'']
+		command = ['git', 'merge', f'origin/{branch}']
 		merge = subprocess.run(command, capture_output=True, text=True)
 		error_msg = ''
 		result = ''
